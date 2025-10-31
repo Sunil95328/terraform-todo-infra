@@ -1,1 +1,37 @@
+name: todo-infra
+run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
+on:   
+  push:
+    branches:
+      - main
+      - 'releases/**'
+permissions:
+  contents: write
+  pull-requests: write
+  deployments: write
+jobs: 
+  terraform_init_plan
+    name: terraform_init_plan
+    runs-on: self-hosted
+    steps:
+      - name: terraform_install
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
 
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
