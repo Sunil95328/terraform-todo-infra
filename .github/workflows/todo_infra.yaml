@@ -10,12 +10,14 @@ permissions:
   pull-requests: write
   deployments: write
 jobs: 
-  terraform_init_plan
-    name: terraform_init_plan
+  terraform_init_plan:
+    name: terraform init and plan
     runs-on: self-hosted
     steps:
-      - name: terraform_install
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
       - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform fmt
